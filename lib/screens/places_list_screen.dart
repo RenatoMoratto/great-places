@@ -21,13 +21,19 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<GreatPlaces>(
-        child: const Center(
-          child: Text('Nenhum local cadastrado!'),
-        ),
-        builder: (context, greatPlaces, child) => greatPlaces.itemsCount == 0
-            ? child!
-            : ListView.builder(
+      body: FutureBuilder(
+        future: Provider.of<GreatPlaces>(context, listen: false).loadPlaces(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Consumer<GreatPlaces>(
+            child: const Center(child: Text('Nenhum local cadastrado!')),
+            builder: (context, greatPlaces, child) {
+              if (greatPlaces.itemsCount == 0) {
+                return child!;
+              }
+              return ListView.builder(
                 itemCount: greatPlaces.itemsCount,
                 itemBuilder: (context, index) => ListTile(
                   leading: CircleAvatar(
@@ -38,7 +44,10 @@ class PlacesListScreen extends StatelessWidget {
                   title: Text(greatPlaces.itemByIndex(index).title),
                   onTap: () {},
                 ),
-              ),
+              );
+            },
+          );
+        },
       ),
     );
   }
