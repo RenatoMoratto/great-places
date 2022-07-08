@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/places_list_screen.dart';
@@ -6,7 +7,9 @@ import 'screens/place_form_screen.dart';
 import 'utils/app_routes.dart';
 import 'providers/great_places.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
+
   runApp(const MyApp());
 }
 
